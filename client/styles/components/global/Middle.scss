@@ -1,0 +1,44 @@
+#Middle{
+}
+
+.centered{
+  text-align:center;
+}
+
+.centered h1{
+  margin:5rem;
+}
+
+.bt-margin{
+  margin-top:2rem;
+}
+
+.btn-width {
+  width:100% !important;
+}
+
+.flex-container{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin:2rem;
+}
+
+.flex-element{
+  width:25rem;
+}
+
+@media screen and (max-width: 560px) {
+    .flex-element{
+      width:90%;
+    }
+
+    .flex-container{
+      margin:0;
+    }
+
+    .bt-margin{
+      margin-top:0;
+    }
+}

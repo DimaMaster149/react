@@ -1,0 +1,48 @@
+#HeaderBar
+{
+  border-radius: 0;
+  margin: 0;
+  background-color: #00B7FF;
+  border:0;
+}
+
+//проверить выравнивание
+.horizontal{
+  align:center;
+}
+
+ul .horizontal li{
+  display:inline-block;
+  margin:0.3rem;
+}
+
+
+.border {
+  padding-left:2rem;
+  padding-right:2rem;
+  padding-bottom: 0.5rem;
+  padding-top:0.5rem;
+  border: 0.1rem solid white;
+  background-color:orange;
+  width:100% !important;
+  color:white;
+}
+
+
+.flex-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding-left:0;
+  margin-left:0;
+
+}
+
+@media screen and (max-width: 767px)
+{
+ ul .horizontal li{
+    width:90%;
+  }
+}
+
+
