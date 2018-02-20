@@ -38,31 +38,31 @@ class Middle extends Component
                 <div>
                     <h1 className="centered"> Create your free profile </h1>
                     <div className="flex-container">
-                        <div className = "flex-element">
+                        <div className = "flex-element el-margin">
                             <p> I am </p>
                             <FormControl componentClass="select" placeholder="select">
                             </FormControl>
                         </div>
 
-                        <div className = "flex-element">
+                        <div className = "flex-element el-margin">
                             <p> I am looking for </p>
                             <FormControl componentClass="select" placeholder="select">
                             </FormControl>
                         </div>
 
-                        <div className = "flex-element">
+                        <div className = "flex-element el-margin">
                             <p> between </p>
                             <FormControl componentClass="select" placeholder="select">
                             </FormControl>
                         </div>
 
-                        <div className = "flex-element">
+                        <div className = "flex-element el-margin">
                             <p> living in </p>
                             <FormControl componentClass="select" placeholder="select">
                             </FormControl>
                         </div>
 
-                        <div className = "bt-margin flex-element">
+                        <div className = "bt-margin flex-element el-margin">
                             <p> </p>
                             <Button bsStyle="warning" className="btn-width" onClick={() => {this.props.onFollow()}}>Following</Button>
                         </div>

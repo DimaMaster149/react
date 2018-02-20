@@ -45,13 +45,19 @@ class HeaderBar extends Component
 
         <Navbar inverse={true} collapseOnSelect={true} id={"HeaderBar"}>
           <Navbar.Header>
-            <Navbar.Brand>
-              <LinkContainer to={"/"}>
-                <div className = "picture">
-                  Здесь будет картинка
-                </div>
-              </LinkContainer>
-            </Navbar.Brand>
+              <Navbar.Brand>
+                  <LinkContainer to={"/home"}>
+                      <div id={"Brand"}>
+                          <div>
+                              <img src={"images/landingA/logo.png"} id={"BrandIcon"}/>
+                          </div>
+
+                          <div id={"BrandText"}>
+                              Find Your Ideal!
+                          </div>
+                      </div>
+                  </LinkContainer>
+              </Navbar.Brand>
               <Navbar.Toggle/>
           </Navbar.Header>
 

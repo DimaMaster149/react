@@ -1,9 +1,29 @@
 #HeaderBar
 {
+  border: 0;
   border-radius: 0;
-  margin: 0;
-  background-color: #00B7FF;
-  border:0;
+  background-color: #329DD5;
+  height: 10rem;
+  margin-bottom: 0px;
+  margin-left: -3rem;
+}
+
+#BrandIcon
+{
+  height: 6rem;
+  width: 23rem;
+}
+
+#BrandText
+{
+  color: white;
+  padding-left: 1rem;
+}
+
+p{
+  color:white;
+  font-size:12px;
+  padding-top:0.5rem;
 }
 
 //проверить выравнивание
@@ -38,11 +58,20 @@ ul .horizontal li{
 
 }
 
+@media  screen and(max-width: 1000px) {
+  .flex-container{
+  }
+}
+
+
 @media screen and (max-width: 767px)
 {
  ul .horizontal li{
     width:90%;
   }
+
 }
+
+
 
 
