@@ -38,7 +38,7 @@ class MiddleSecond extends Component
             //logged: PropTypes.bool.isRequired,
             //user: PropTypes.object.isRequired,
             error: PropTypes.string.isRequired,
-            onFinal: PropTypes.func.isRequired
+
         };
 
     static defaultProps =
@@ -53,7 +53,7 @@ class MiddleSecond extends Component
             //     photo: null
             //   },
             error: null,
-            onFinal: () => {},
+
         };
 
     checkValidation()
@@ -122,7 +122,7 @@ class MiddleSecond extends Component
                                 <p> Born </p>
                                 <div className="row">
                                     <div className = "col-lg-4 col-md-4 col-xs-12 single-pad">
-                                        <FormControl componentClass="select" name={"born-year"} type={"text"} value={this.state.input.born_year}
+                                        <FormControl componentClass="select" name={"born_year"} type={"text"} value={this.state.input.born_year}
                                                      onChange={(e) => {this.handleFieldChange(e)}} placeholder={"Year"}>
                                             <option>1</option>
                                             <option>2</option>
@@ -133,7 +133,7 @@ class MiddleSecond extends Component
                                     </div>
                                     <div className = "col-lg-4 col-md-4 col-xs-12 single-pad">
 
-                                        <FormControl componentClass="select" name={"born-month"} type={"text"} value={this.state.input.born_month}
+                                        <FormControl componentClass="select" name={"born_month"} type={"text"} value={this.state.input.born_month}
                                                      onChange={(e) => {this.handleFieldChange(e)}} placeholder={"Month"}>
                                             <option>1</option>
                                             <option>2</option>
@@ -151,7 +151,7 @@ class MiddleSecond extends Component
                                     </div>
                                     <div className = "col-lg-4 col-md-4 col xs-12">
 
-                                        <FormControl componentClass="select" name={"born-day"} type={"text"} value={this.state.input.born_day}
+                                        <FormControl componentClass="select" name={"born_day"} type={"text"} value={this.state.input.born_day}
                                                      onChange={(e) => {this.handleFieldChange(e)}} placeholder={"Day"}>
                                             <option>1</option>
                                             <option>2</option>
@@ -218,6 +218,8 @@ class MiddleSecond extends Component
                                 <p> Territory </p>
                                 <FormControl componentClass="select" name={"territory"} type={"text"} value={this.state.input.territory}
                                              onChange={(e) => {this.handleFieldChange(e)}} placeholder={"Territory"}>
+                                    <option>First territory</option>
+                                    <option>Second territory</option>
                                 </FormControl>
                             </div>
 
@@ -234,7 +236,7 @@ class MiddleSecond extends Component
                             </div>
 
                             <div className = "col-lg-3 col-md-5 col-xs-12">
-                                <Button bsStyle="warning btn-width" type={"submit"} onClick={() => {this.props.onFinal()}}>Finalizar</Button>
+                                <Button bsStyle="warning" className="btn-width" type="submit" >Finalizar</Button>
                             </div>
 
                             <div className = "col-lg-3 col-md-1 col-xs-0">
