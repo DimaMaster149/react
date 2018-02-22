@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 
 import {Grid} from 'react-bootstrap';
 
@@ -6,9 +6,12 @@ import HeaderBar from "../components/global/HeaderBar";
 import Middle from "../components/global/Middle"
 import MiddleSecond from "../components/global/MiddleSecond"
 import Carousel from "../components/global/Carousel"
-import SignUp from "../components/StartPage/SignUp";
-import LogIn from "../components/StartPage/LogIn";
 import StartContent from "../components/StartPage/StartContent";
+
+import {connect} from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import authActions from "../actions/auth";
 
 
 class StartPage extends Component
@@ -23,32 +26,25 @@ class StartPage extends Component
         FollowPage:true,
         FinalPage:false,
 
-
     }
   };
 
   //=====================================================================================
-
-  signUp()
-  {
-    this.setState({pagesTrigger: {startPage: false, signUpPage: true, logInPage: false}});
-  }
-
-  logIn()
-  {
-    this.setState({pagesTrigger: {startPage: false, signUpPage: false, logInPage: true}});
-  }
-
     Follow()
     {
         this.setState({pagesTrigger: {startPage: false, signUpPage: false, logInPage: false, FollowPage:false, FinalPage:true}});
     }
 
-    Final()
+    SubmitFinal(data)
     {
-        this.setState({pagesTrigger: {startPage: false, signUpPage: false, logInPage: false, FollowPage:true, FinalPage:false}});
+        this.props.authActions.signUp(data);
     }
 
+
+    signUp() {
+        this.setState({pagesTrigger: {startPage: false, signUpPage: false, signInPage: false}});
+       // this.props.authActions.clearMessage();
+    }
   //=====================================================================================
 
   renderPageContent()
@@ -82,7 +78,7 @@ class StartPage extends Component
     else if (this.state.pagesTrigger.FinalPage)
     {
         return(
-            <MiddleSecond onFinal={() => {this.Final()}}/>
+            <MiddleSecond onSubmitFinal={(data) => {this.SubmitFinal(data)}}/>
         )
     }
 
@@ -104,4 +100,19 @@ class StartPage extends Component
   }
 }
 
-export default StartPage
+
+function mapStateToProps (state)
+{
+    return {
+        auth: state.get('auth').toJS(),
+    }
+}
+
+function mapDispatchToProps(dispatch)
+{
+    return {
+        authActions: bindActionCreators(authActions, dispatch),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(StartPage)
