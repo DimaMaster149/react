@@ -8,22 +8,23 @@ import bodyParser from 'body-parser';
 import index from '../routes/index';
 import api from '../routes/api';
 
-//import config from './config';
+import config from './config';
 
 const app = express();
 
 //======================================================
 //=================== AUTH CONFIG ======================
 
-// import session from 'cookie-session';
-// import passport from 'passport';
+ import session from 'cookie-session';
+ import passport from 'passport';
 //
-// app.use( session( config.session ));
-// app.use( passport.initialize() );
-// app.use( passport.session( config.session ) );
+ app.use( session( config.session ));
+ app.use( passport.initialize() );
+ app.use( passport.session( config.session ) );
 
-//passport configuration
-//require('../auth/config')(passport);
+ //passport configuration
+
+require('../auth/config')(passport);
 // ===================================================
 
 // ============== EJS CONFIGURATION ====================

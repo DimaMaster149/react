@@ -8,9 +8,10 @@ const actions =
 
         login: createActionAsync('AUTH_LOGIN_COMMON', (data) =>
         {
+            console.log(data);
+
             const loginUrl = '/api/auth/login';
-            const body = JSON.stringify({name: data.name, email: data.email, key: data.key, born_year: data.born_year, born_month: data.born_month, born_day: data.born_day,
-                education: data.education, children: data.children, region: data.region, territory: data.territory});
+            const body = JSON.stringify({ email: data.email, key: data.key});
 
             console.log(body);
 
@@ -58,8 +59,8 @@ const actions =
         signUp: createActionAsync('AUTH_SIGN_UP_COMMON', (data) =>
         {
             const loginUrl = '/api/auth/signUp';
-            const body = JSON.stringify({name: data.name, email: data.email, key: data.key, born_year: data.born_year, born_month: data.born_month, born_day: data.born_day,
-                education: data.education, children: data.children, region: data.region, territory: data.territory});
+            const body = JSON.stringify({user: {name: data.name, email: data.email, key: data.key, born_year: data.born_year, born_month: data.born_month, born_day: data.born_day,
+                education: data.education, children: data.children, region: data.region, territory: data.territory}});
 
             console.log(body);
 

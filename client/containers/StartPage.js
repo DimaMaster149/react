@@ -22,7 +22,7 @@ class StartPage extends Component
     {
       startPage: false,
       signUpPage: false,
-      logInPage: false,
+      loginPage: false,
         FollowPage:true,
         FinalPage:false,
 
@@ -32,7 +32,7 @@ class StartPage extends Component
   //=====================================================================================
     Follow()
     {
-        this.setState({pagesTrigger: {startPage: false, signUpPage: false, logInPage: false, FollowPage:false, FinalPage:true}});
+        this.setState({pagesTrigger: {startPage: false, signUpPage: false, loginPage: false, FollowPage:false, FinalPage:true}});
     }
 
     SubmitFinal(data)
@@ -40,35 +40,23 @@ class StartPage extends Component
         this.props.authActions.signUp(data);
     }
 
+    login(data)
+    {
+        console.log(data);
+        this.props.authActions.login(data);
+    }
 
     signUp() {
         this.setState({pagesTrigger: {startPage: false, signUpPage: false, signInPage: false}});
        // this.props.authActions.clearMessage();
     }
+
+
   //=====================================================================================
 
   renderPageContent()
   {
-    if (this.state.pagesTrigger.startPage)
-    {
-      return(
-        <StartContent/>
-      )
-    }
-    else if (this.state.pagesTrigger.signUpPage)
-    {
-      return(
-        <SignUp/>
-      )
-    }
-    else if (this.state.pagesTrigger.logInPage)
-    {
-      return(
-        <LogIn/>
-      )
-    }
-
-    else if (this.state.pagesTrigger.FollowPage)
+    if (this.state.pagesTrigger.FollowPage)
     {
         return(
             <Middle onFollow={() => {this.Follow()}}/>
@@ -82,8 +70,6 @@ class StartPage extends Component
         )
     }
 
-
-
   }
 
   //=====================================================================================
@@ -92,7 +78,7 @@ class StartPage extends Component
   {
     return(
       <Grid fluid={true} id={"StartPageContainer"}>
-        <HeaderBar  onLogIn={() => {this.LogIn}}/>
+        <HeaderBar onlogin={(data) => {this.login(data)}}/>
           {this.renderPageContent()}
         <Carousel />
       </Grid>

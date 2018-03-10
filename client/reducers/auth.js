@@ -8,8 +8,7 @@ import {LOCATION_CHANGE} from 'react-router-redux';
 const nullUser =
     {
         id: null,
-        firstName: null,
-        lastName: null,
+        name: null,
         email: null,
         photo: null,
         access: null,

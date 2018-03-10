@@ -1,96 +1,113 @@
-import Role from "../models/roles";
-import User from "../models/users";
-
+import DatabaseController from './DataBaseController';
+import Logger from '../../utils/logger';
 import Hasher from '../../utils/hasher';
 
-export default
+//import messages from '../../utils/messages';
+//import {tables, roles} from '../models/DataBase';
+
+// =====================================================================================================================
+
+class AuthController
 {
-    getWithAccessInfoById(id)
+    static getWithAccessInfoById(id)
     {
-        return new Promise( (resolve, reject) =>
+        const query = `SELECT 
+      u.id as id, u.username as username, r.access as access, p.photo
+      FROM users AS u 
+      INNER JOIN roles AS r 
+      ON r.id = u.role
+      INNER JOIN photos AS p 
+      ON u.id = p.userid
+      WHERE u.id = ${id}`;
+
+        return new Promise((resolve, reject) =>
         {
-            User.findOne({_id: id}).populate("role")
-                .then( (result) =>
+            DatabaseController.runQuery(query)
+                .then((result) =>
                 {
-                    return resolve(result);
+                    if(result.rows === [])
+                    {
+                        reject();
+                    }
+
+                    resolve(result.rows[0])
                 })
-                .catch( (error) =>
+                .catch((error) =>
                 {
+                    Logger.SQLQueryError(error, query);
                     reject(error);
                 });
         });
-    },
+    }
 
-    getByLogin(email)
+    static getByLogin(email)
     {
-        return new Promise ( (resolve, reject) =>
+        const query = `SELECT 
+      u.id as id, u.email as email, u.username as username, u.password as password, p.photo,
+      r.access as access
+      FROM users AS u 
+      INNER JOIN roles AS r 
+      ON r.id = u.role
+      INNER JOIN photos AS p 
+      ON u.id = p.userid
+      WHERE email = '${email.toLowerCase()}'`;
+
+        return new Promise((resolve, reject) =>
         {
-            User.findOne({email: email}).populate("role")
-                .then( (result) =>
+            DatabaseController.runQuery(query)
+                .then((result) =>
                 {
-                    return resolve(result);
+                    resolve(result.rows[0]);
                 })
-                .catch( (error) =>
+                .catch((error) =>
                 {
+                    Logger.SQLQueryError(error, query);
                     reject(error);
-                })
+                });
         });
-    },
+    }
 
-    createUser(userData)
+    static createUser(userData)
     {
-        return new Promise( (resolve, reject) =>
+        const commonUser = 1;
+
+        return new Promise((resolve, reject) =>
         {
-            try
-            {
-                const commonUser = "user";
+            Hasher.hashPasswordAsync(userData.key)
+                .then((passwordHash) =>
+                {
+                    const query = `INSERT INTO users (username, password, email, role)
+          VALUES ('${userData.name}', '${passwordHash}', '${userData.email}', '${commonUser}') 
+          RETURNING id`;
 
-                const getHashAndRole =
-                    [
-                        Hasher.hashPasswordAsync(userData.password),
-                        Role.findOne({name: commonUser})
-                    ];
 
-                Promise.all(getHashAndRole)
-                    .then( (result) => {
-                        const passwordHash = result[0];
-                        const userRoleID = result[1]._id;
-
-                        const user = new User(
-                            {
-                                _id: new mongoose.Types.ObjectId(),
-                                firstName: userData.firstName,
-                                lastName: userData.lastName,
-                                email: userData.email,
-                                password: passwordHash,
-                                photo: "/images/default-profile.png",
-                                frozen: false,
-                                role: userRoleID,
-                                created: Date.now(),
-                                lastSignIn: Date.now()
-                            });
-
-                        user.save()
-                            .then( (result) =>
-                            {
-                                return resolve(result);
-                            })
-                            .catch( (error) =>
-                            {
-                                console.log(error);
-                                reject (error);
-                            })
-                    })
-                    .catch( (error) =>
+                    if (!userData.name || !userData.key)
                     {
-                        console.log(error);
-                        reject (error);
-                    })
-            }
-            catch(error)
-            {
-                return reject(error);
-            }
+                        reject(messages.wrongCredentials)
+                    }
+
+                    DatabaseController.runQuery(query)
+                        .then((result) =>
+                        {
+                            result = JSON.parse(JSON.stringify(result.rows));
+                            resolve(result[0].id)
+                        })
+                        .catch((error) =>
+                        {
+                            Logger.SQLQueryError(error, query);
+                            reject(error);
+                        });
+
+                });
         });
     }
 }
+
+export default AuthController;
+
+// return new Promise((resolve, reject) =>
+// {
+//
+//     const query = `INSERT INTO users (username, password, email, role)
+//           VALUES ('${userData.name}', '${userData.key}', '${userData.email}', '${commonUser}')
+//           RETURNING id`;

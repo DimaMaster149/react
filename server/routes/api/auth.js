@@ -3,10 +3,9 @@ const router = express.Router();
 
 import passport from 'passport';
 
-//import Validator from '../../utils/validator';
+import Validator from '../../utils/validator';
 import Response from '../../utils/response';
-
-import auth from "../../mvc/controllers/auth";
+import AuthController from "../../mvc/controllers/auth";
 
 const messages =
     {
@@ -51,18 +50,9 @@ router.post('/login', (req, res, next) =>
                                 user:
                                     {
                                         id: user.id,
-                                        name: user.name,
+                                        username: user.username,
                                         email: user.email,
-                                        key: user.key,
-                                        born_year: user.born_year,
-                                        born_month: user.born_month,
-                                        born_day: user.born_day,
-                                        education: user.education,
-                                        children: user.children,
-                                        region: user.region,
-                                        territory: user.territory,
                                         photo: user.photo,
-                                        created: user.created,
                                         access: user.access,
                                         session: req.sessionID
                                     }
@@ -70,7 +60,8 @@ router.post('/login', (req, res, next) =>
 
                         Response.send(res, true, answer);
                     }
-                })
+                } )
+
             }
             else
             {
@@ -80,39 +71,36 @@ router.post('/login', (req, res, next) =>
                     };
 
                 Response.send(res, false, answer);
+                // на фронт
             }
         }
     }) (req,res,next);
 });
 
-console.log(req.body.user);
-
-router.post('/signUp', (req, res, next) =>
+router.post('/signUp', (req, res, next ) =>
 {
     const userData = req.body.user;
 
+    // ===============================================================================================
 
+//     if(req.user !== undefined)
+// {
+//     return Response.send(res, false, {message: messages.alreadyLogged});
+// }
+//
+//     if(!userData.username || !Validator.validateUsername(userData.username))
+//     {
+//         return Response.send(res,false, {message: messages.wrongUsernameProvided})
+//     }
+//
+//     if( !userData.password || userData.password.length < 4 )
+//     {
+//         return Response.send(res, false, {message: messages.passwordError});
+//     }
 
     // ===============================================================================================
 
-    // if(req.user !== undefined)
-    // {
-    //   return Response.send(res, false, {message: messages.alreadyLogged});
-    // }
-    //
-    // if(!userData.username || !Validator.validateUsername(userData.username))
-    // {
-    //   return Response.send(res,false, {message: messages.wrongUsernameProvided})
-    // }
-    //
-    // if( !userData.password || userData.password.length < 4 )
-    // {
-    //   return Response.send(res, false, {message: messages.passwordError});
-    // }
-
-    // ===============================================================================================
-
-    auth.createUser(userData)
+    AuthController.createUser(userData)
         .then((answer) =>
         {
             if( answer == undefined )
@@ -120,8 +108,12 @@ router.post('/signUp', (req, res, next) =>
                 return Response.send(res, false, {message:messages.alreadyExists});
             }
 
-            userData.id = answer._id;
-            userData.created = answer.created;
+            userData.id = answer;
+            console.log(userData);
+
+            // UserController.createDefaultPhoto(userData.id);
+            // UserController.createDetailsAuth(userData);
+            // UserController.createInterests(userData.id);
 
             req.login( userData, (err) =>
             {
@@ -137,12 +129,10 @@ router.post('/signUp', (req, res, next) =>
                         user:
                             {
                                 id: userData.id,
-                                firstName: userData.firstName,
-                                lastName: userData.lastName,
+                                username: userData.username,
                                 email: userData.email,
-                                photo: "/images/default-profile.png",
-                                access: 1,
-                                created: userData.created,
+                                photo: '',
+                                access: 0,
                                 session: req.sessionID
                             }
                     };

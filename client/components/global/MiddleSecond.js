@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import {Form, FormGroup, Navbar, NavItem, Nav, Clearfix, FormControl, Button, input} from 'react-bootstrap';
+import {Form, FormGroup, Navbar, NavItem, Nav, Clearfix, FormControl, Button, input, Row, Alert} from 'react-bootstrap';
 import {LinkContainer} from 'react-router-bootstrap';
+import Validator from "../../utils/validator";
 
 class MiddleSecond extends Component
 {
@@ -24,11 +25,19 @@ class MiddleSecond extends Component
                     territory:''
                 },
 
-            // touch:
-            // {
-            //   email: false,
-            //   password: false
-            // }
+             touch:
+             {
+                name: false,
+                email: false,
+                key: false,
+
+             },
+
+            alert:
+                {
+                    show: false,
+                    message: ''
+                }
         };
 
 
@@ -56,6 +65,28 @@ class MiddleSecond extends Component
 
         };
 
+    nameValidation()
+    {
+        return this.state.touch.name ? Validator.validateUsername(this.state.input.name) : null;
+    }
+
+    emailValidation()
+    {
+        if (this.props.error)
+        {
+            //this.setState({alert: {show: true, message: "This email has already been used"}});
+            return "error";
+        }
+        return this.state.touch.email ? Validator.validateEmail(this.state.input.email) : null;
+
+    }
+
+    passwordValidation()
+    {
+        return  this.state.touch.key? Validator.validatePassword(this.state.input.key) : null;
+    }
+
+
     checkValidation()
     {
         return this.props.error ? "error" : null;
@@ -69,14 +100,81 @@ class MiddleSecond extends Component
         this.setState({input: inputData});
     }
 
+    handleFieldTouch(e)
+    {
+        let touchedField = Object.assign({}, this.state.touch);
+        touchedField[e.target.name] = false;
+
+        this.setState({touch: touchedField});
+    }
+
+    handleFieldBlur(e)
+    {
+        let touchedField = Object.assign({}, this.state.touch);
+        touchedField[e.target.name] = true;
+
+        this.setState({touch: touchedField});
+    }
+
+
     onSubmitFinal(e)
     {
         e.preventDefault();
 
-        this.props.onSubmitFinal(this.state.input);
+        if
+        (
+            (this.nameValidation() && this.nameValidation() !== "error") &&
+            (this.emailValidation() && this.emailValidation() !== "error")
+            //&&
+            //(this.passwordValidation() && this.passwordValidation() !== "error")
+
+        )
+        {
+            this.props.onSubmitFinal(this.state.input);
+        }
+
+        else
+        {
+            this.setState(
+                {
+                    touch:
+                        {
+                            name: true,
+                            email: true,
+                            key: true,
+                        }
+                });
+
+            this.setState({alert: {show: true, message: "Please fill in the fields correctly"}});
+        }
+
     }
 
-    //==============================================================================================
+
+    handleAlertHide()
+    {
+        this.setState({alert: {show: false}});
+    }
+
+    //===================================renderAlertWindow===========================================================
+
+    renderError()
+    {
+        return (
+            <Alert bsStyle="danger" id={"error-alert"}>
+                <h4>Attention!</h4>
+                <p>
+                    {this.state.alert.message}
+                </p>
+                <p>
+                    <Button bsStyle={"danger"} onClick={() => this.handleAlertHide()}>
+                        OK
+                    </Button>
+                </p>
+            </Alert>
+        )
+    }
+    //===================================renderWindow================================================================
 
     render()
     {
@@ -85,22 +183,32 @@ class MiddleSecond extends Component
 
                 <div className = "container-fluid">
                     <Form method={"POST"} onSubmit={(e) => this.onSubmitFinal(e)}>
+
                         <div className="row pad" >
+                            {this.state.alert.show ? this.renderError() : null}
                             <div className = "col-lg-3 col-md-1 col-xs-0" >
                             </div>
 
                             <div className = "col-lg-3 col-md-5 col-xs-12">
                                 <p> Name </p>
-                                <FormControl name={"name"} type={"text"} value={this.state.input.name}
-                                                 onChange={(e) => {this.handleFieldChange(e)}} placeholder={"Name"}>
-                                </FormControl>
+                                <FormGroup validationState={(this.nameValidation())}>
+                                    <FormControl name={"name"} type={"text"} value={this.state.input.name}
+                                                 onChange={(e) => {this.handleFieldChange(e)}} placeholder={"Name"}
+                                                 onSelect={(e) => {this.handleFieldTouch(e)}}
+                                                 onBlur={(e) => {this.handleFieldBlur(e)}}>
+                                    </FormControl>
+                                </FormGroup>
                             </div>
 
                             <div className = "col-lg-3 col-md-5 col-xs-12">
                                 <p> Email </p>
-                                <FormControl  name={"email"} type={"email"} value={this.state.input.email}
-                                              onChange={(e) => {this.handleFieldChange(e)}} placeholder={"Email"}>
-                                </FormControl>
+                                <FormGroup validationState={this.emailValidation()}>
+                                    <FormControl  name={"email"} type={"email"} value={this.state.input.email}
+                                                  onChange={(e) => {this.handleFieldChange(e)}} placeholder={"Email"}
+                                                  onSelect={(e) => {this.handleFieldTouch(e)}}
+                                                  onBlur={(e) => {this.handleFieldBlur(e)}} >
+                                    </FormControl>
+                            </FormGroup>
                             </div>
 
                             <div className = "col-lg-3 col-md-1 col-xs-0">
@@ -113,9 +221,9 @@ class MiddleSecond extends Component
 
                             <div className = "col-lg-3 col-md-5 col-xs-12">
                                 <p> Key </p>
-                                <FormControl name={"key"} type={"text"} value={this.state.input.key}
+                                    <FormControl name={"key"} type={"password"} value={this.state.input.key}
                                                  onChange={(e) => {this.handleFieldChange(e)}} placeholder={"Key"}>
-                                </FormControl>
+                                    </FormControl>
                             </div>
 
                             <div className="col-lg-3 col-md-5 col-xs-12">
